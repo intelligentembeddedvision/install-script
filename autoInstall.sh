@@ -236,26 +236,10 @@ conda create -y --name=genericEnvironment python=3.9 >/dev/null
 if [ $? -eq "0" ]
 then
     echo "genericEnvironment conda environment was created succesfully!"
-    
-    conda run -n genericEnvironment conda install -y -c conda-forge cudatoolkit >/dev/null
-    afterDownloadExistanceCheck $? "cudatoolkit"
-
-    conda run -n genericEnvironment pip install nvidia-cudnn-cu11 >/dev/null
-    afterDownloadExistanceCheck $? "nvidia-cudnn"
-
-    CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
-    export LD_LIBRARY_PATH=$CUDNN_PATH/lib:$CONDA_PREFIX/lib/:$LD_LIBRARY_PATH
-
-    # Dependencies will be added to the path everytime when this environment will be activated
-    mkdir -p $CONDA_PREFIX/etc/conda/activate.d
-    echo 'CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))' >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
-    echo 'export LD_LIBRARY_PATH=$CUDNN_PATH/lib:$CONDA_PREFIX/lib/:$LD_LIBRARY_PATH' >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
-
     echo "pip upgrade is in progress ..."
     conda run -n genericEnvironment pip install --upgrade pip >/dev/null
-
     echo "tensorflow installation is in progress ..."
-    conda run -n genericEnvironment pip install tensorflow >/dev/null
+    conda run -n genericEnvironment pip install tensorflow[and-cuda] >/dev/null
     afterDownloadExistanceCheck $? "tensorflow"
 else
     echo "genericEnvironment conda environment was not created succesfully, please follow the error output!"
