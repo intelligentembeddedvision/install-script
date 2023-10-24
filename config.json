@@ -1,0 +1,23 @@
+{
+   "GIT":{
+      "username":"ievtest",
+      "email":"iev@email.com"
+   },
+   "SYS_USERS":[
+      {
+         "username":"test1",
+         "password":"pass"
+      },
+      {
+         "username":"test2",
+         "password":"pass"
+      }
+   ],
+   "GROUP_SETUP":{
+      "name":"iev$",
+      "users":[
+         "test1",
+         "test2"
+      ]
+   }
+}
