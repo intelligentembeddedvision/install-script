@@ -26,8 +26,7 @@ basicInstallation()
 
 userCreationCheck()
 {
-    id $1 >/dev/null
-    if [ $? -eq "0" ]; then
+    if id "$1" &>/dev/null; then
         printf "User with username: $1 was created succesfully! \xE2\x9C\x94\n"
     else
         printf "User with username: $1 was not created due to an error, please check the issue!\n"
@@ -80,6 +79,18 @@ echo "System time and hardware time were set!"
 # jq tool installation
 basicInstallation "jq"
 
+# Grub Customizer Installation section
+echo "Grub Customizer repository setup in progress ..."
+# First add the repository key to trusted software providers list
+sudo add-apt-repository -y ppa:danielrichter2007/grub-customizer >/dev/null
+# update packages
+sudo apt-get update >/dev/null
+# install Grub Customizer
+basicInstallation "grub-customizer"
+
+# bovo installation
+basicInstallation "bovo"
+
 # AnyDesk Installation section
 echo "AnyDesk repository setup in progress ..."
 # First add the repository key to trusted software providers list
@@ -118,6 +129,11 @@ fi
 # Double Commander
 basicInstallation "doublecmd-common"
 
+#Wake On lan WOL
+basicInstallation "ethtool"
+basicInstallation "wakeonlan"
+
+
 # Create needed directories
 sudo mkdir /home/Datasets /home/Projects
 
@@ -155,6 +171,16 @@ jq -r '.GROUP_SETUP.users[]' $configFile | while read currentUserName; do
     sudo usermod -a -G $groupName $currentUserName
     isGroupContainingGivenUser $groupName $currentUserName
 done
+
+# Add privilieges for the newly created group
+sudo chgrp -R iev$ /home/miniconda3
+sudo chmod -R u=rwx,g=rwx /home/miniconda3
+
+sudo chgrp -R iev$ /home/Datasets
+sudo chgrp -R iev$ /home/Projects
+
+sudo chmod -R u=rwx,g=rwx /home/Datasets
+sudo chmod -R u=rwx,g=rwx /home/Projects
 
 # miniconda installation
 echo "Miniconda download, installation and setup are in progress ..."
@@ -198,16 +224,6 @@ sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/u
 echo "available docker version: $(apt-cache policy docker-ce | grep "Candidate:" | awk '{print $2}')"
 echo "Docker repository setup is done!"
 basicInstallation "docker-ce"
-
-# Add privilieges for the newly created group
-sudo chgrp -R iev$ /home/miniconda3
-sudo chmod -R u=rwx,g=rwx /home/miniconda3
-
-sudo chgrp -R iev$ /home/Datasets
-sudo chgrp -R iev$ /home/Projects
-
-sudo chmod -R u=rwx,g=rwx /home/Datasets
-sudo chmod -R u=rwx,g=rwx /home/Projects
 
 # samba installation
 sudo apt-get update >/dev/null
