@@ -172,16 +172,6 @@ jq -r '.GROUP_SETUP.users[]' $configFile | while read currentUserName; do
     isGroupContainingGivenUser $groupName $currentUserName
 done
 
-# Add privilieges for the newly created group
-sudo chgrp -R iev$ /home/miniconda3
-sudo chmod -R u=rwx,g=rwx /home/miniconda3
-
-sudo chgrp -R iev$ /home/Datasets
-sudo chgrp -R iev$ /home/Projects
-
-sudo chmod -R u=rwx,g=rwx /home/Datasets
-sudo chmod -R u=rwx,g=rwx /home/Projects
-
 # miniconda installation
 echo "Miniconda download, installation and setup are in progress ..."
 
@@ -200,8 +190,6 @@ done
 
 # Ensure that conda is on the PATH
 export PATH=/home/miniconda3/bin:$PATH
-alias execBrc='cd ~ && exec bash && cd /home'
-execBrc
 # Create the .sh script that will run for each new bash session
 sudo echo "export PATH=/home/miniconda3/bin:$PATH" > /etc/profile.d/ievInit.sh
 
@@ -209,6 +197,19 @@ sudo echo "export PATH=/home/miniconda3/bin:$PATH" > /etc/profile.d/ievInit.sh
 conda config --add channels conda-forge
 
 echo "Miniconda setup step is done!"
+
+echo "Group privilieges setup is in progress..."
+# Add privilieges for the newly created group
+sudo chgrp -R iev$ /home/miniconda3
+sudo chmod -R u=rwx,g=rwx /home/miniconda3
+
+sudo chgrp -R iev$ /home/Datasets
+sudo chgrp -R iev$ /home/Projects
+
+sudo chmod -R u=rwx,g=rwx /home/Datasets
+sudo chmod -R u=rwx,g=rwx /home/Projects
+
+echo "Group privilieges setup execution is done!"
 
 # git installation
 basicInstallation "git"

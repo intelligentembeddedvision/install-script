@@ -6,11 +6,11 @@
    "SYS_USERS":[
       {
          "username":"test1",
-         "password":"pass"
+         "password":"pass!1234"
       },
       {
          "username":"test2",
-         "password":"pass"
+         "password":"pass@1234"
       }
    ],
    "GROUP_SETUP":{
